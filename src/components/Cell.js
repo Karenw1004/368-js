@@ -34,7 +34,7 @@ class Cell extends React.Component {
         const {row,col} = this.props;
         const number = (
             <input type="text" className="cell" maxLength={1} pattern="[0-9]*" 
-            onInput = {this.handleInputChange.bind(this)} 
+            onChange = {this.handleInputChange.bind(this)} 
             style={{backgroundColor: getCellColor(row,col)}}
             value={this.state.val}
              required />

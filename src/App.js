@@ -1,19 +1,23 @@
 import React from 'react';
-import Header from './Header';
-import Grid from './Grid';
-import './App.css';
-import {Button,Container,Alert} from "react-bootstrap";
-import {validateSudoko} from "./validateSudoko";
+import Header from './components/Header';
+import Grid from './components/Grid';
+import './stylesheets/App.css';
+import AlertMessage from './components/AlertMessage';
+import {Button,Container} from "react-bootstrap";
+// import {validateSudoko} from "./validateSudoko";
 
-export default class App extends React.Component {
 
-  constructor() {
-    super();
-    
+class App extends React.Component{
+
+  constructor(props){
+    super(props);
     this.state = {
+      validSudoko: true,
       grid: new Array(9).fill().map( () => {return new Array(9).map( () => {return 0}) })
     };
   }
+  
+  
   check(){
     //need params (board)
     /* param: board (character[][])
@@ -22,31 +26,30 @@ export default class App extends React.Component {
     // let result = validateSudoko();
     
     // let result = true;
-    // if (result) {
-    //   return (
-    //   <Alert variant="success"> 
-    //     This is a valid sudoko grid!
-    //   </Alert>
-    //     )}
-    // else {
-    //   return (
-    //     <Alert variant="danger"> 
-    //       This is a INVALID sudoko grid!
-    //     </Alert>
-    //   )}
+    // if (result === true) {
+    //   alert("true");
+    // }
+    try
+   { this.setState({validSudoko: true});
+    console.log("clicked");
+    throw "error" ;
+  } catch (e) {
+    console.log("error", e);
+  }
     }
   
   render(){
     return (
       <div className="App">
         <Header />
+        {this.state.validSudoko ? <AlertMessage /> : null}
         <Container>    
           <Grid />
           <form>
             <Button type="submit" variant="dark" 
-            onSubmit={validateSudoko}>Validate Sudoko</Button>
+            onSubmit={this.check}
+            >Validate Sudoko</Button>
           </form>
-    
         </Container>
       </div>
     );
@@ -55,4 +58,4 @@ export default class App extends React.Component {
   
 }
 
-
+export default App;
