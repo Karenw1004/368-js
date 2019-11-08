@@ -10,7 +10,6 @@ function Header(props) {
         <Navbar.Brand>368 Karen </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="#home">Sudoku</Nav.Link>
-  
         </Nav>
       </Navbar.Collapse>
     </Navbar>

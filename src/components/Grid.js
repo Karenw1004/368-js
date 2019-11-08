@@ -7,18 +7,11 @@ class Grid extends React.Component {
       <table>
         <tbody>
           {this.props.grid.map((val, ind) => (
-            <Row
-              onChange={this.props.onChange}
-              key={ind}
-              rowNumber={ind}
-              data={val}
-              grid = {this.props.grid}
-            />
+            <Row onChange={this.props.onChange} key={ind} rowNumber={ind} data={val} grid ={this.props.grid}/>
           ))}
         </tbody>
       </table>
     );
   }
 }
-
 export default Grid;
