@@ -7,9 +7,9 @@ function Header(props) {
     <Navbar collapseOnSelect bg="dark" variant="dark" expand="md" sticky="top">
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse>
-        <Navbar.Brand>368 Sudoko</Navbar.Brand>
+        <Navbar.Brand>368 Karen </Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
+          <Nav.Link href="#home">Sudoku</Nav.Link>
   
         </Nav>
       </Navbar.Collapse>
