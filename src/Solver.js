@@ -56,17 +56,9 @@ function isValid(board){
    return true;
 }
 
-function isFullGrid(board){
-    for (let i = 0; i < 9 ; i++ ){
-        for(let j = 0; j< 9; j++){
-           if (board[i][j] === 0 ) return false;
-        }
-    }
-    return true;
-}
 export default function solveSudoku(board){
-    if (!isValid(board) || isFullGrid) {return false; }
-    var emptyCell = {row: 0, col: 0};
+    if (isValid(board) === false) {return false; }
+    let emptyCell = {row: 0, col: 0};
     
     if ( !(isEmptyCell(board, emptyCell) )) { return true;}
 

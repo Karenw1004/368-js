@@ -10,7 +10,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       isButtonValidateClick: false,isButtonSolveClick: false, isValidSudoku: false,
-      isEmptyGrid: true, isSolve: false, showAlert: false, isFullGrid: false,
+      isEmptyGrid: true, isSolve: false, showAlert: false, isFullGrid: false, showFullAlert: false,
       grid: new Array(9).fill().map( () => {return new Array(9).fill().map(() => {return 0; }); })
     };
     this.handleValidating = this.handleValidating.bind(this);
@@ -24,7 +24,7 @@ class App extends React.Component {
     let emptyCellCount = 0;
     for (let i = 0; i < 9 ; i++ ){
       for(let j = 0; j< 9; j++){
-        var currCell = this.state.grid[i][j];
+        let currCell = this.state.grid[i][j];
         
         if (currCell === 0 ){ emptyCellCount++;continue; }
         var boxIndex = Math.floor(i/3)*3 + Math.floor(j/3);
@@ -38,9 +38,8 @@ class App extends React.Component {
     }
     this.setState({isValidSudoku: isValid});
     emptyCellCount === 81 ? this.setState({isEmptyGrid: true}) : this.setState({isEmptyGrid: false});
-   
   }
- 
+  
   validator= e => {
     this.handleValidating();
     this.handleShowAlert();
@@ -55,17 +54,39 @@ class App extends React.Component {
     this.setState({showAlert: true});
     setTimeout(()=>this.setState({showAlert: false}), 4000);
   }
-  solve = e => {
-    if (solveSudoku(this.state.grid)){
-      this.setState({isSolve: true});
-      this.setState({isEmptyGrid: false});
-      
-    } else {
-      this.setState({isSolve: false});
+
+  checkFullGrid() {
+    for (let i = 0; i < 9 ; i++ ){
+      for(let j = 0; j< 9; j++){
+        let currCell = this.state.grid[i][j];
+        if (currCell === 0 ){ return false; }
+      }
     }
-    this.handleShowAlert();
-      this.handleSolButtonState();
-      console.log("SOLVEABLE");
+    return true;
+  }
+
+  handleFullAlert() {
+    this.setState({showFullAlert: true});
+    setTimeout(()=>this.setState({showFullAlert: false}), 4000);
+  }
+  solve = e => {
+    if (!this.checkFullGrid()){
+      if (solveSudoku(this.state.grid)){
+        this.setState({isSolve: true});
+        this.setState({isEmptyGrid: false});
+        console.log("SOLVEABLE");
+        
+      } else {
+        this.setState({isSolve: false});
+        console.log("UNSOLVEABLE");
+      }
+      this.handleShowAlert();
+        this.handleSolButtonState();
+    } else {
+      this.handleFullAlert()
+    }
+    
+      
       
   }
   handleSolButtonState() {
@@ -110,6 +131,9 @@ class App extends React.Component {
               : null)
           : null
 
+          }
+          {
+            this.state.showFullAlert ? <AlertMessage type={"full"} empty={false} show={this.state.showFullAlert} /> : null
           }
           
           <Row >

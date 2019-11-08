@@ -23,6 +23,13 @@ function AlertMessage( {valid,empty,show,solve,type} ) {
         </Alert>
         );
       }
+      if (type === "full") {
+        return  (
+          <Alert color={"warning"} isOpen={visible} >
+           FULL sudoku grid!
+        </Alert>
+        );
+      }
   }   
  
 }
