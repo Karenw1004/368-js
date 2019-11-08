@@ -25,13 +25,9 @@ class Cell extends React.Component {
     this.setState({ val });
   };
 
-  handleChange = e => {
-    this.props.onChange(this.props.row, this.props.col, Number(e.target.value) || 0);
-    this.setState({val: e.target.value});
-  }
-
   render() {
-    const { row, col } = this.props;
+    const { row, col, grid } = this.props;
+    const val = grid[row][col];
     const number = (
       <input
         type="text"
@@ -40,8 +36,9 @@ class Cell extends React.Component {
         pattern="[0-9]*"
         onInput={this.handleInputChange.bind(this)}
         style={{ backgroundColor: getCellColor(row, col) }}
-        onChange = {this.handleChange}
-        required
+        value={val === 0 ? "" : val}
+        onChange = {this.handleInputChange.bind(this) }
+        
       />
     );
     return <td>{number}</td>;

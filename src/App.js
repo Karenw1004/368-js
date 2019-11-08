@@ -9,8 +9,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isButtonClick: false, isValidSudoku: false,
-      isEmptyGrid: true, isSolve: false, showAlert: false,
+      isButtonValidateClick: false,isButtonSolveClick: false, isValidSudoku: false,
+      isEmptyGrid: true, isSolve: false, showAlert: false, isFullGrid: false,
       grid: new Array(9).fill().map( () => {return new Array(9).fill().map(() => {return 0; }); })
     };
     this.handleValidating = this.handleValidating.bind(this);
@@ -21,12 +21,12 @@ class App extends React.Component {
     var colArr = new Array(9).fill().map( () => {return new Set()} );
     var boxArr = new Array(9).fill().map( () => {return new Set()} );
     let isValid = true;
-    let count = 0;
+    let emptyCellCount = 0;
     for (let i = 0; i < 9 ; i++ ){
       for(let j = 0; j< 9; j++){
         var currCell = this.state.grid[i][j];
         
-        if (currCell === 0 ){ count++;continue; }
+        if (currCell === 0 ){ emptyCellCount++;continue; }
         var boxIndex = Math.floor(i/3)*3 + Math.floor(j/3);
         if (rowArr[i].has(currCell) || colArr[j].has(currCell) || boxArr[boxIndex].has(currCell)){ 
           isValid = false            
@@ -36,36 +36,44 @@ class App extends React.Component {
         boxArr[boxIndex].add(currCell) ;
       }
     }
-    console.log(isValid, "isvlaid");
     this.setState({isValidSudoku: isValid});
-    count === 81 ? this.setState({isEmptyGrid: true}) : this.setState({isEmptyGrid: false});
+    emptyCellCount === 81 ? this.setState({isEmptyGrid: true}) : this.setState({isEmptyGrid: false});
    
   }
-
+ 
   validator= e => {
-    console.log("clicked");
     this.handleValidating();
-    this.setState({isButtonClick: true});
     this.handleShowAlert();
-    console.log(this.state);
+    this.handleValButtonState();
   }
-  toggleAlertOff = () => {
-    this.setState({showAlert: false});
+  handleValButtonState() {
+    this.setState({isButtonValidateClick: true});
+    setTimeout(()=>this.setState({isButtonValidateClick: false}), 4000);
   }
-
+  
   handleShowAlert() {
     this.setState({showAlert: true});
     setTimeout(()=>this.setState({showAlert: false}), 4000);
   }
   solve = e => {
-    try {
-      console.log(solveSudoku(this.state.grid));
-      console.log(this.state.grid);
-      console.log("no error when solving");
+    if (solveSudoku(this.state.grid)){
+      this.setState({isSolve: true});
+      this.setState({isEmptyGrid: false});
+      
+    } else {
+      this.setState({isSolve: false});
     }
-    catch (error){
-      console.log("ERROR IS : " ,error);
-    }
+    this.handleShowAlert();
+      this.handleSolButtonState();
+      console.log("SOLVEABLE");
+      
+  }
+  handleSolButtonState() {
+    this.setState({isButtonSolveClick: true});
+    setTimeout(()=>this.setState({isButtonSolveClick: false}), 4000);
+  }
+  resetGrid = e => {
+    this.setState({grid:  new Array(9).fill().map( () => { return new Array(9).fill().map( () => {return 0;} ); })} );
   }
   onChange = (row, col, value) => {
     let cloneGrid = [...this.state.grid];
@@ -82,22 +90,35 @@ class App extends React.Component {
       <div className="App">
         <Container >
           <Header />
-          { this.state.isButtonClick
+          { this.state.isButtonValidateClick
           ? ( this.state.showAlert ? 
               (this.state.isValidSudoku  
-                ?  <AlertMessage valid={true} empty={this.state.isEmptyGrid} show={this.state.showAlert}/> 
-                : <AlertMessage valid={false} empty={this.state.isEmptyGrid} show={this.state.showAlert}/>) 
+                ? <AlertMessage type={"valid"} valid={true} empty={this.state.isEmptyGrid} show={this.state.showAlert}/> 
+                : <AlertMessage type={"valid"} valid={false} empty={this.state.isEmptyGrid} show={this.state.showAlert}/>
+              ) 
               : null)
           : null
-          } 
+          }
+          {
+            this.state.isButtonSolveClick
+          ? ( this.state.showAlert ? 
+            (this.state.isSolve  
+              ? <AlertMessage type={"solve"} solve={true} empty={false} show={this.state.showAlert}/>
+              : <AlertMessage type={"solve"} solve={false} empty={false} show={this.state.showAlert}/>
+            ) 
 
+              : null)
+          : null
+
+          }
           
           <Row >
             <Col xs lg="3"/>      
             <Col xs lg="auto" >
             <Grid grid={this.state.grid} onChange={this.onChange} />
-            <Button type="button" variant="dark" onClick={this.validator} style={{marginRight: "10px"}}>Validate Sudoko</Button>
-            <Button type="button" variant="primary" onClick={this.solve}>Solve Sudoko</Button>
+            <Button type="button" variant="dark" onClick={this.validator} style={{marginRight: "5px"}}>Validate Sudoko</Button>
+            <Button type="button" variant="primary" onClick={this.solve}  style={{marginRight: "5px"}}>Solve Sudoko</Button>
+            <Button type="button" variant="danger" onClick={ this.resetGrid}  style={{marginRight: "5px"}} >Reset</Button>
             </Col>
             <Col xs lg="3"/>
           </Row>         

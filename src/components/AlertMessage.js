@@ -2,25 +2,28 @@ import React , {useState} from 'react';
 import {Alert} from 'reactstrap';
 
 //react hooks
-function AlertMessage( {valid,empty,show} ) {
-  const [visible, setVisible] = useState(true);
-  // const onDismiss = () => setVisible(false);
+function AlertMessage( {valid,empty,show,solve,type} ) {
+  const [visible] = useState(true);
   
   if (show){
-    if (empty) {
-      return (
-        <Alert color="danger" isOpen={visible} >
-        You are a EMPTY sudoko grid!
-      </Alert>
-      );
-    } else {
-      return (
+    if (type === "valid"){
+      if (empty) {
+        return ( <Alert color="danger" isOpen={visible} >You are a EMPTY sudoko grid!</Alert>);
+      } else {
+        return (
         <Alert color={valid ? "info" : "danger"} isOpen={visible} >
-          You are a {valid ? "solvable" : "INSOLVABLE"} sudoko grid!
+           You are a {valid ? "VALID" : "INVALID"} sudoku grid!
+          </Alert>
+        );}
+    }
+    if (type === "solve") {
+        return  (
+          <Alert color={solve ? "primary" : "dark"} isOpen={visible} >
+           {solve ? "SOLVABLE" : "INSOLVABLE"} sudoku grid!
         </Alert>
-      );
+        );
       }
-  }
+  }   
  
 }
 export default AlertMessage

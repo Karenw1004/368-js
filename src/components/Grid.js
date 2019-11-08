@@ -12,6 +12,7 @@ class Grid extends React.Component {
               key={ind}
               rowNumber={ind}
               data={val}
+              grid = {this.props.grid}
             />
           ))}
         </tbody>
